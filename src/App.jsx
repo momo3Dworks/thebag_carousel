@@ -5,6 +5,8 @@ import mobileImage from './assets/jamon_swiss.webp';
 
 const TOTAL_SLIDES = 12;
 
+const ORDER_URL = 'https://app.ipos247.com/contactless/#/bc3795f482a7649811dab74d29562fd54c5a4925ac98d4e84150d58b188c24b7';
+
 const slides = Array.from({ length: TOTAL_SLIDES }, (_, index) => ({
   id: index + 1,
   title: `Jamón & Swiss - Diapositiva ${index + 1} de ${TOTAL_SLIDES}`,
@@ -135,11 +137,6 @@ export default function App() {
     }
   };
 
-  const handleCtaClick = (e, slideIndex) => {
-    e.stopPropagation();
-    console.log(`Ordenando THEbag - Slide ${slideIndex + 1}`);
-  };
-
   // Posición 'top' de las flechas: mitad exacta de la imagen si está medida, o fallback proporcional
   const arrowTopStyle = imageHeight ? { top: `${imageHeight / 2}px` } : { top: '44%' };
 
@@ -198,14 +195,16 @@ export default function App() {
 
                     {/* Call to Action en cada slide */}
                     <div className="w-full flex justify-center px-2 pt-2.5 sm:pt-4">
-                      <button
-                        type="button"
-                        onClick={(e) => handleCtaClick(e, index)}
-                        className="w-[96%] sm:w-auto min-w-[240px] md:min-w-[280px] py-3.5 px-8 rounded-full bg-white text-[#5c0d1e] font-bold text-base sm:text-lg tracking-wide border-2 border-[#5c0d1e] shadow-md hover:bg-[#5c0d1e] hover:text-white hover:shadow-xl hover:shadow-[#5c0d1e]/25 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2.5 cursor-pointer group"
+                      <a
+                        href={ORDER_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="w-[96%] sm:w-auto min-w-[240px] md:min-w-[280px] py-3.5 px-8 rounded-full bg-white text-[#5c0d1e] font-bold text-base sm:text-lg tracking-wide border-2 border-[#5c0d1e] shadow-md hover:bg-[#5c0d1e] hover:text-white hover:shadow-xl hover:shadow-[#5c0d1e]/25 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2.5 cursor-pointer group no-underline"
                       >
                         <ShoppingBag className="w-5 h-5 text-[#5c0d1e] group-hover:text-white transition-colors duration-300" />
                         <span>Ordene THEbag</span>
-                      </button>
+                      </a>
                     </div>
                   </div>
                 </div>
