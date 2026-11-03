@@ -141,7 +141,7 @@ export default function App() {
   const arrowTopStyle = imageHeight ? { top: `${imageHeight / 2}px` } : { top: '44%' };
 
   return (
-    <main className="min-h-screen w-full bg-white flex flex-col justify-center items-center px-0.5 sm:px-6 py-2 sm:py-8 overflow-hidden select-none">
+    <main className="min-h-screen w-full bg-white flex flex-col justify-start md:justify-center items-center px-0.5 sm:px-6 pt-1 sm:pt-4 pb-4 sm:pb-8 overflow-hidden select-none">
       {/* Contenedor principal del carrusel */}
       <div className="relative w-full max-w-5xl mx-auto flex flex-col items-center">
         
@@ -218,9 +218,9 @@ export default function App() {
             onClick={prevSlide}
             style={arrowTopStyle}
             aria-label="Diapositiva anterior"
-            className="absolute left-0.5 sm:left-4 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/50 hover:bg-white/85 text-[#5c0d1e]/90 hover:text-[#5c0d1e] backdrop-blur-md border border-white/70 shadow-sm hover:shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#5c0d1e]/30"
+            className="absolute left-0.5 sm:left-4 -translate-y-1/2 z-20 w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-white/55 hover:bg-white/85 text-[#5c0d1e]/90 hover:text-[#5c0d1e] backdrop-blur-md border border-white/70 shadow-sm hover:shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#5c0d1e]/30"
           >
-            <ChevronLeft className="w-6 h-6 sm:w-7 sm:h-7 -ml-0.5" />
+            <ChevronLeft className="w-4.5 h-4.5 sm:w-7 sm:h-7 -ml-0.5" />
           </button>
 
           {/* Flecha Derecha Semitransparente - Alineada exactamente al centro vertical de la imagen */}
@@ -229,9 +229,9 @@ export default function App() {
             onClick={nextSlide}
             style={arrowTopStyle}
             aria-label="Diapositiva siguiente"
-            className="absolute right-0.5 sm:right-4 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/50 hover:bg-white/85 text-[#5c0d1e]/90 hover:text-[#5c0d1e] backdrop-blur-md border border-white/70 shadow-sm hover:shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#5c0d1e]/30"
+            className="absolute right-0.5 sm:right-4 -translate-y-1/2 z-20 w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-white/55 hover:bg-white/85 text-[#5c0d1e]/90 hover:text-[#5c0d1e] backdrop-blur-md border border-white/70 shadow-sm hover:shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#5c0d1e]/30"
           >
-            <ChevronRight className="w-6 h-6 sm:w-7 sm:h-7 -mr-0.5" />
+            <ChevronRight className="w-4.5 h-4.5 sm:w-7 sm:h-7 -mr-0.5" />
           </button>
         </div>
 
