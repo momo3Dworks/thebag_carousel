@@ -141,7 +141,7 @@ export default function App() {
   const arrowTopStyle = imageHeight ? { top: `${imageHeight / 2}px` } : { top: '44%' };
 
   return (
-    <main className="min-h-screen w-full bg-white flex flex-col justify-center items-center px-1 sm:px-6 py-2 sm:py-8 overflow-hidden select-none">
+    <main className="min-h-screen w-full bg-white flex flex-col justify-center items-center px-0.5 sm:px-6 py-2 sm:py-8 overflow-hidden select-none">
       {/* Contenedor principal del carrusel */}
       <div className="relative w-full max-w-5xl mx-auto flex flex-col items-center">
         
@@ -172,7 +172,7 @@ export default function App() {
               {slides.map((slide, index) => (
                 <div
                   key={slide.id}
-                  className="w-full flex-shrink-0 flex flex-col items-center justify-center p-0.5 sm:p-2"
+                  className="w-full flex-shrink-0 flex flex-col items-center justify-center p-0 sm:p-2"
                   aria-hidden={currentIndex !== index}
                 >
                   <div className="relative w-full flex flex-col items-center">
@@ -188,19 +188,19 @@ export default function App() {
                         src={slide.mobileImage}
                         alt={slide.title}
                         loading={index === 0 ? 'eager' : 'lazy'}
-                        className="w-[96%] sm:w-auto h-auto max-h-[64vh] sm:max-h-[68vh] md:max-h-[72vh] object-contain rounded-xl shadow-md border border-slate-100 transition-all pointer-events-none select-none"
+                        className="w-[98%] sm:w-auto h-auto max-h-[64vh] sm:max-h-[68vh] md:max-h-[72vh] object-contain rounded-xl shadow-md border border-slate-100 transition-all pointer-events-none select-none"
                         draggable={false}
                       />
                     </picture>
 
                     {/* Call to Action en cada slide */}
-                    <div className="w-full flex justify-center px-2 pt-2.5 sm:pt-4">
+                    <div className="w-full flex justify-center px-1 pt-2.5 sm:pt-4">
                       <a
                         href={ORDER_URL}
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={(e) => e.stopPropagation()}
-                        className="w-[96%] sm:w-auto min-w-[240px] md:min-w-[280px] py-3.5 px-8 rounded-full bg-white text-[#5c0d1e] font-bold text-base sm:text-lg tracking-wide border-2 border-[#5c0d1e] shadow-md hover:bg-[#5c0d1e] hover:text-white hover:shadow-xl hover:shadow-[#5c0d1e]/25 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2.5 cursor-pointer group no-underline"
+                        className="w-[98%] sm:w-auto min-w-[240px] md:min-w-[280px] py-3.5 px-8 rounded-full bg-white text-[#5c0d1e] font-bold text-base sm:text-lg tracking-wide border-2 border-[#5c0d1e] shadow-md hover:bg-[#5c0d1e] hover:text-white hover:shadow-xl hover:shadow-[#5c0d1e]/25 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2.5 cursor-pointer group no-underline"
                       >
                         <ShoppingBag className="w-5 h-5 text-[#5c0d1e] group-hover:text-white transition-colors duration-300" />
                         <span>Ordene THEbag</span>
@@ -218,7 +218,7 @@ export default function App() {
             onClick={prevSlide}
             style={arrowTopStyle}
             aria-label="Diapositiva anterior"
-            className="absolute left-1 sm:left-4 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/50 hover:bg-white/85 text-[#5c0d1e]/90 hover:text-[#5c0d1e] backdrop-blur-md border border-white/70 shadow-sm hover:shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#5c0d1e]/30"
+            className="absolute left-0.5 sm:left-4 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/50 hover:bg-white/85 text-[#5c0d1e]/90 hover:text-[#5c0d1e] backdrop-blur-md border border-white/70 shadow-sm hover:shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#5c0d1e]/30"
           >
             <ChevronLeft className="w-6 h-6 sm:w-7 sm:h-7 -ml-0.5" />
           </button>
@@ -229,7 +229,7 @@ export default function App() {
             onClick={nextSlide}
             style={arrowTopStyle}
             aria-label="Diapositiva siguiente"
-            className="absolute right-1 sm:right-4 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/50 hover:bg-white/85 text-[#5c0d1e]/90 hover:text-[#5c0d1e] backdrop-blur-md border border-white/70 shadow-sm hover:shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#5c0d1e]/30"
+            className="absolute right-0.5 sm:right-4 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/50 hover:bg-white/85 text-[#5c0d1e]/90 hover:text-[#5c0d1e] backdrop-blur-md border border-white/70 shadow-sm hover:shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#5c0d1e]/30"
           >
             <ChevronRight className="w-6 h-6 sm:w-7 sm:h-7 -mr-0.5" />
           </button>
