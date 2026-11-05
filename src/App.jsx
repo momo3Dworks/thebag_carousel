@@ -1,18 +1,112 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { ChevronLeft, ChevronRight, ShoppingBag } from 'lucide-react';
-import desktopImage from './assets/jamon_swiss_desktop.webp';
-import mobileImage from './assets/jamon_swiss.webp';
 
-const TOTAL_SLIDES = 12;
+// Imágenes Mobile
+import brisketCheesesteakMobile from './assets/brisket_cheesesteak.webp';
+import chickenCheesesteakMobile from './assets/chicken_cheesesteak.webp';
+import chickenTenderMobile from './assets/chicken_tender.webp';
+import dobleHumoMobile from './assets/doble_humo.webp';
+import elSantoHeavyMobile from './assets/el_santo_heavy.webp';
+import hhCubanMobile from './assets/hh_cuban.webp';
+import jamonSwissMobile from './assets/jamon_swiss.webp';
+import kimchiMobile from './assets/kimchi.webp';
+import pastramiMobile from './assets/pastrami.webp';
+import pavoMuensterMobile from './assets/pavo_muenster.webp';
+import theUnforgettableMobile from './assets/the_unforgettable.webp';
+import tunaMeltMobile from './assets/tuna_melt.webp';
+
+// Imágenes Desktop (_desktop.webp)
+import brisketCheesesteakDesktop from './assets/brisket_cheesesteak_desktop.webp';
+import chickenCheesesteakDesktop from './assets/chicken_cheesesteak_desktop.webp';
+import chickenTenderDesktop from './assets/chicken_tender_desktop.webp';
+import dobleHumoDesktop from './assets/doble_humo_desktop.webp';
+import elSantoHeavyDesktop from './assets/el_santo_heavy_desktop.webp';
+import hhCubanDesktop from './assets/hh_cuban_desktop.webp';
+import jamonSwissDesktop from './assets/jamon_swiss_desktop.webp';
+import kimchiDesktop from './assets/kimchi_desktop.webp';
+import pastramiDesktop from './assets/pastrami_desktop.webp';
+import pavoMuensterDesktop from './assets/pavo_muenster_desktop.webp';
+import theUnforgettableDesktop from './assets/the_unfergettable_desktop.webp';
+import tunaMeltDesktop from './assets/tuna_melt_desktop.webp';
 
 const ORDER_URL = 'https://app.ipos247.com/contactless/#/bc3795f482a7649811dab74d29562fd54c5a4925ac98d4e84150d58b188c24b7';
 
-const slides = Array.from({ length: TOTAL_SLIDES }, (_, index) => ({
-  id: index + 1,
-  title: `Jamón & Swiss - Diapositiva ${index + 1} de ${TOTAL_SLIDES}`,
-  desktopImage,
-  mobileImage,
-}));
+const slides = [
+  {
+    id: 1,
+    title: 'Brisket Cheesesteak',
+    mobileImage: brisketCheesesteakMobile,
+    desktopImage: brisketCheesesteakDesktop,
+  },
+  {
+    id: 2,
+    title: 'Chicken Cheesesteak',
+    mobileImage: chickenCheesesteakMobile,
+    desktopImage: chickenCheesesteakDesktop,
+  },
+  {
+    id: 3,
+    title: 'Chicken Tender',
+    mobileImage: chickenTenderMobile,
+    desktopImage: chickenTenderDesktop,
+  },
+  {
+    id: 4,
+    title: 'Doble Humo',
+    mobileImage: dobleHumoMobile,
+    desktopImage: dobleHumoDesktop,
+  },
+  {
+    id: 5,
+    title: 'El Santo Heavy',
+    mobileImage: elSantoHeavyMobile,
+    desktopImage: elSantoHeavyDesktop,
+  },
+  {
+    id: 6,
+    title: 'HH Cuban',
+    mobileImage: hhCubanMobile,
+    desktopImage: hhCubanDesktop,
+  },
+  {
+    id: 7,
+    title: 'Jamón & Swiss',
+    mobileImage: jamonSwissMobile,
+    desktopImage: jamonSwissDesktop,
+  },
+  {
+    id: 8,
+    title: 'Kimchi',
+    mobileImage: kimchiMobile,
+    desktopImage: kimchiDesktop,
+  },
+  {
+    id: 9,
+    title: 'Pastrami',
+    mobileImage: pastramiMobile,
+    desktopImage: pastramiDesktop,
+  },
+  {
+    id: 10,
+    title: 'Pavo & Muenster',
+    mobileImage: pavoMuensterMobile,
+    desktopImage: pavoMuensterDesktop,
+  },
+  {
+    id: 11,
+    title: 'The Unforgettable',
+    mobileImage: theUnforgettableMobile,
+    desktopImage: theUnforgettableDesktop,
+  },
+  {
+    id: 12,
+    title: 'Tuna Melt',
+    mobileImage: tunaMeltMobile,
+    desktopImage: tunaMeltDesktop,
+  },
+];
+
+const TOTAL_SLIDES = slides.length;
 
 export default function App() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -60,7 +154,7 @@ export default function App() {
       window.removeEventListener('resize', updateImageHeight);
       if (observer) observer.disconnect();
     };
-  }, [updateImageHeight]);
+  }, [updateImageHeight, currentIndex]);
 
   // Navegación con teclado
   useEffect(() => {
@@ -176,15 +270,15 @@ export default function App() {
                   aria-hidden={currentIndex !== index}
                 >
                   <div className="relative w-full flex flex-col items-center">
-                    {/* Imagen adaptable */}
+                    {/* Imagen adaptable: Desktop vs Mobile */}
                     <picture className="w-full flex items-center justify-center">
                       <source
                         media="(min-width: 768px)"
                         srcSet={slide.desktopImage}
                       />
                       <img
-                        ref={index === 0 ? activeImgRef : null}
-                        onLoad={index === 0 ? updateImageHeight : undefined}
+                        ref={index === currentIndex ? activeImgRef : null}
+                        onLoad={index === currentIndex ? updateImageHeight : undefined}
                         src={slide.mobileImage}
                         alt={slide.title}
                         loading={index === 0 ? 'eager' : 'lazy'}
