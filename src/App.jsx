@@ -109,6 +109,9 @@ const slides = [
 const TOTAL_SLIDES = slides.length;
 
 export default function App() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [progress, setProgress] = useState(0);
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [touchStartX, setTouchStartX] = useState(null);
   const [touchEndX, setTouchEndX] = useState(null);
@@ -118,6 +121,76 @@ export default function App() {
 
   const containerRef = useRef(null);
   const activeImgRef = useRef(null);
+
+  // Preloader Robusto: Precarga y decodifica las imágenes antes de mostrar el carrusel
+  useEffect(() => {
+    let isMounted = true;
+    const isDesktop = window.innerWidth >= 768;
+
+    // Priorizamos precargar las 12 imágenes correspondientes al tamaño de pantalla del usuario
+    const primaryImages = slides.map((s) => (isDesktop ? s.desktopImage : s.mobileImage));
+    const secondaryImages = slides.map((s) => (isDesktop ? s.mobileImage : s.desktopImage));
+
+    let loadedCount = 0;
+    const totalToLoad = primaryImages.length;
+
+    const onImageLoaded = () => {
+      if (!isMounted) return;
+      loadedCount += 1;
+      const currentProgress = Math.min(100, Math.round((loadedCount / totalToLoad) * 100));
+      setProgress(currentProgress);
+
+      if (loadedCount >= totalToLoad) {
+        // Breve retraso suave de 200ms para evitar parpadeos y permitir que el DOM renderice
+        setTimeout(() => {
+          if (isMounted) {
+            setIsLoading(false);
+          }
+        }, 220);
+      }
+    };
+
+    primaryImages.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+
+      if (img.complete) {
+        if ('decode' in img) {
+          img.decode().then(onImageLoaded).catch(onImageLoaded);
+        } else {
+          onImageLoaded();
+        }
+      } else {
+        img.onload = () => {
+          if ('decode' in img) {
+            img.decode().then(onImageLoaded).catch(onImageLoaded);
+          } else {
+            onImageLoaded();
+          }
+        };
+        img.onerror = onImageLoaded; // No bloquear al usuario en caso de fallo de red
+      }
+    });
+
+    // Precargar las imágenes complementarias en segundo plano de forma pasiva
+    secondaryImages.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+
+    // Timeout de seguridad: Si la conexión es lenta, liberar la UI a los 6 segundos máximo
+    const fallbackTimeout = setTimeout(() => {
+      if (isMounted && isLoading) {
+        setProgress(100);
+        setIsLoading(false);
+      }
+    }, 6000);
+
+    return () => {
+      isMounted = false;
+      clearTimeout(fallbackTimeout);
+    };
+  }, []);
 
   const prevSlide = useCallback(() => {
     setCurrentIndex((prev) => (prev === 0 ? TOTAL_SLIDES - 1 : prev - 1));
@@ -139,6 +212,8 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    if (isLoading) return;
+
     updateImageHeight();
 
     let observer;
@@ -154,10 +229,12 @@ export default function App() {
       window.removeEventListener('resize', updateImageHeight);
       if (observer) observer.disconnect();
     };
-  }, [updateImageHeight, currentIndex]);
+  }, [updateImageHeight, currentIndex, isLoading]);
 
   // Navegación con teclado
   useEffect(() => {
+    if (isLoading) return;
+
     const handleKeyDown = (e) => {
       if (e.key === 'ArrowLeft') {
         prevSlide();
@@ -167,7 +244,7 @@ export default function App() {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [prevSlide, nextSlide]);
+  }, [prevSlide, nextSlide, isLoading]);
 
   // Gestos táctiles (Swipe)
   const handleTouchStart = (e) => {
@@ -234,8 +311,90 @@ export default function App() {
   // Posición 'top' de las flechas: mitad exacta de la imagen si está medida, o fallback proporcional
   const arrowTopStyle = imageHeight ? { top: `${imageHeight / 2}px` } : { top: '44%' };
 
+  // ==========================================
+  // VISTA SKELETON DURANTE LA CARGA
+  // ==========================================
+  if (isLoading) {
+    return (
+      <main className="min-h-screen w-full bg-white flex flex-col justify-start md:justify-center items-center px-0 sm:px-6 pt-1 sm:pt-4 pb-4 sm:pb-8 overflow-x-hidden select-none">
+        {/* Contenedor central 100% simétrico en el eje X */}
+        <div className="w-full max-w-5xl mx-auto flex flex-col items-center justify-center text-center px-0">
+          
+          {/* Skeleton de la Imagen y Controles */}
+          <div className="relative w-full flex items-center justify-center px-0">
+            {/* Tarjeta de imagen con shimmer exactamente acotada al viewport en mobile */}
+            <div
+              style={{
+                width: 'min(98vw, calc(64vh * 0.8), 740px)',
+                aspectRatio: '4 / 5',
+              }}
+              className="rounded-xl shimmer-placeholder border border-slate-100 shadow-md flex flex-col items-center justify-center px-4 mx-auto relative overflow-hidden"
+            >
+              {/* Branding y barra de progreso centrados matemáticamente en el eje X */}
+              <div className="relative z-10 w-full flex flex-col items-center justify-center text-center mx-auto">
+                <div className="w-12 h-12 rounded-2xl bg-white/95 backdrop-blur-sm shadow-sm border border-gray-100 flex items-center justify-center mb-3 mx-auto">
+                  <ShoppingBag className="w-6 h-6 text-[#5c0d1e] animate-pulse" />
+                </div>
+                
+                <p className="text-sm sm:text-base font-bold text-gray-800 tracking-wide text-center w-full m-0 p-0">
+                  Cargando THEbag...
+                </p>
+                
+                <p className="text-xs sm:text-sm text-[#5c0d1e] font-semibold mt-1 text-center w-full m-0 p-0">
+                  {progress}%
+                </p>
+
+                {/* Barra de progreso con relleno suave */}
+                <div className="w-40 sm:w-56 h-1.5 bg-gray-200/90 rounded-full overflow-hidden mt-3 shadow-inner mx-auto">
+                  <div
+                    className="h-full bg-[#5c0d1e] transition-all duration-200 ease-out rounded-full"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Skeleton de Flechas laterales en desktop (ocultas en mobile para evitar cualquier desbalance) */}
+            <div className="hidden sm:block absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full shimmer-placeholder opacity-60 pointer-events-none" />
+            <div className="hidden sm:block absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full shimmer-placeholder opacity-60 pointer-events-none" />
+          </div>
+
+          {/* Skeleton del Botón CTA centrado con el mismo ancho exacto */}
+          <div className="w-full flex justify-center items-center px-0 pt-2.5 sm:pt-4 mx-auto">
+            <div
+              style={{
+                width: 'min(98vw, calc(64vh * 0.8), 740px)',
+              }}
+              className="h-[52px] rounded-full shimmer-placeholder opacity-75 shadow-xs mx-auto"
+            />
+          </div>
+
+          {/* Skeleton de los Puntos indicadores */}
+          <div className="flex items-center justify-center gap-1.5 sm:gap-2 mt-3 sm:mt-5 py-1.5 sm:py-2 px-3 sm:px-4 bg-gray-50/70 rounded-full border border-gray-100 mx-auto">
+            {Array.from({ length: TOTAL_SLIDES }).map((_, i) => (
+              <div
+                key={i}
+                className={`rounded-full ${
+                  i === 0
+                    ? 'w-6 sm:w-8 h-2.5 sm:h-3 bg-gray-300'
+                    : 'w-2.5 sm:w-3 h-2.5 sm:h-3 bg-gray-200'
+                }`}
+              />
+            ))}
+          </div>
+
+          {/* Skeleton del contador inferior */}
+          <div className="mt-1 w-12 h-3.5 rounded bg-gray-100 animate-pulse mx-auto" />
+        </div>
+      </main>
+    );
+  }
+
+  // ==========================================
+  // CARRUSEL COMPLETO RENDERIZADO
+  // ==========================================
   return (
-    <main className="min-h-screen w-full bg-white flex flex-col justify-start md:justify-center items-center px-0.5 sm:px-6 pt-1 sm:pt-4 pb-4 sm:pb-8 overflow-hidden select-none">
+    <main className="min-h-screen w-full bg-white flex flex-col justify-start md:justify-center items-center px-0.5 sm:px-6 pt-1 sm:pt-4 pb-4 sm:pb-8 overflow-hidden select-none transition-opacity duration-500 opacity-100">
       {/* Contenedor principal del carrusel */}
       <div className="relative w-full max-w-5xl mx-auto flex flex-col items-center">
         
